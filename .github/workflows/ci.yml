@@ -30,7 +30,7 @@ jobs:
       - name: Build cimgui
         run: |
           IMGUI_DIR="$(nimble path imgui)"
-          make -C "$IMGUI_DIR/src/imgui/private/cimgui"
+          make -C "$IMGUI_DIR/imgui/private/cimgui"
 
       - name: Lint
         run: |

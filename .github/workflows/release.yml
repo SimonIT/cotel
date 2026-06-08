@@ -53,7 +53,7 @@ jobs:
       - name: Build cimgui
         run: |
           IMGUI_DIR="$(nimble path imgui)"
-          make -C "$IMGUI_DIR/src/imgui/private/cimgui"
+          make -C "$IMGUI_DIR/imgui/private/cimgui"
 
       - name: Build application
         run: |
@@ -65,7 +65,7 @@ jobs:
         run: |
           mkdir -p dist/release
           IMGUI_DIR="$(nimble path imgui)"
-          CIMGUI_LIB="$(find "$IMGUI_DIR/src/imgui/private/cimgui" -maxdepth 2 -type f \( -name 'libcimgui.so' -o -name 'libcimgui.so.*' \) | head -n 1)"
+          CIMGUI_LIB="$(find "$IMGUI_DIR/imgui/private/cimgui" -maxdepth 2 -type f \( -name 'libcimgui.so' -o -name 'libcimgui.so.*' \) | head -n 1)"
           if [ -n "$CIMGUI_LIB" ]; then
             cp "$CIMGUI_LIB" dist/linux/
           fi
@@ -122,7 +122,7 @@ jobs:
         shell: bash
         run: |
           IMGUI_DIR="$(nimble path imgui)"
-          make -C "$IMGUI_DIR/src/imgui/private/cimgui"
+          make -C "$IMGUI_DIR/imgui/private/cimgui"
 
       - name: Install libcoap with vcpkg
         uses: johnwason/vcpkg-action@v8
@@ -193,7 +193,7 @@ jobs:
       - name: Build cimgui
         run: |
           IMGUI_DIR="$(nimble path imgui)"
-          make -C "$IMGUI_DIR/src/imgui/private/cimgui"
+          make -C "$IMGUI_DIR/imgui/private/cimgui"
 
       - name: Install libcoap with Homebrew
         run: |
