@@ -43,7 +43,7 @@ jobs:
 
       - name: Install Nim dependencies
         run: |
-          nimble install --accept parsetoml tempfile imgui nimgl
+          nimble install --accept parsetoml tempfile https://github.com/nimgl/imgui.git nimgl
 
       - name: Install libcoap from distro packages
         run: |
@@ -116,7 +116,7 @@ jobs:
       - name: Install Nim dependencies
         shell: pwsh
         run: |
-          nimble install --accept parsetoml tempfile imgui nimgl
+          nimble install --accept parsetoml tempfile https://github.com/nimgl/imgui.git nimgl
 
       - name: Build cimgui
         shell: bash
@@ -188,7 +188,7 @@ jobs:
 
       - name: Install Nim dependencies
         run: |
-          nimble install --accept parsetoml tempfile imgui nimgl
+          nimble install --accept parsetoml tempfile https://github.com/nimgl/imgui.git nimgl
 
       - name: Build cimgui
         run: |
