@@ -1,0 +1,41 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - "**"
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  build-and-lint:
+    name: Build and lint
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Nim
+        uses: jiro4989/setup-nim-action@v2
+        with:
+          nim-version: "2.2.10"
+
+      - name: Install Nim dependencies
+        run: |
+          nimble install --accept parsetoml tempfile imgui nimgl
+
+      - name: Build cimgui
+        run: |
+          IMGUI_DIR="$(nimble path imgui)"
+          make -C "$IMGUI_DIR/src/imgui/private/cimgui"
+
+      - name: Lint
+        run: |
+          nim lint src/gui/main
+
+      - name: Build
+        run: |
+          nim build src/gui/main
