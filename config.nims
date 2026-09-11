@@ -23,8 +23,11 @@ task buildRelease, "Build release executable":
   setCommand("c")
 
 task lint, "Check executable":
-  switch("path", "src")
-  setCommand("check")
+  # Run in a separate process (rather than setCommand("check") directly):
+  # `nim check` invoked from within a task shares compiler state with the
+  # task's own NimScript evaluation, corrupting the system module and
+  # producing bogus errors instead of real ones.
+  selfExec("check --path:src " & paramStr(paramCount()))
 
 task docs, "Build doc html":
   switch("project") 

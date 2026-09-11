@@ -43,11 +43,11 @@ jobs:
 
       - name: Install Nim dependencies
         run: |
-          nimble install --accept parsetoml tempfile https://github.com/nimgl/imgui.git nimgl
+          nimble install --accept parsetoml tempfile "https://github.com/nimgl/imgui.git@#0079c2d" nimgl
 
       - name: Install libcoap from distro packages
         run: |
-          sudo apt-get install -y libcoap3-dev libcoap3
+          sudo apt-get install -y libcoap3-dev
           sudo ldconfig
 
       - name: Build cimgui
@@ -116,7 +116,7 @@ jobs:
       - name: Install Nim dependencies
         shell: pwsh
         run: |
-          nimble install --accept parsetoml tempfile https://github.com/nimgl/imgui.git nimgl
+          nimble install --accept parsetoml tempfile "https://github.com/nimgl/imgui.git@#0079c2d" nimgl
 
       - name: Build cimgui
         shell: bash
@@ -188,7 +188,7 @@ jobs:
 
       - name: Install Nim dependencies
         run: |
-          nimble install --accept parsetoml tempfile https://github.com/nimgl/imgui.git nimgl
+          nimble install --accept parsetoml tempfile "https://github.com/nimgl/imgui.git@#0079c2d" nimgl
 
       - name: Build cimgui
         run: |
