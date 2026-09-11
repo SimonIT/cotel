@@ -27,10 +27,11 @@ jobs:
         run: |
           nimble install --accept parsetoml tempfile "https://github.com/nimgl/imgui.git@#0079c2d" nimgl
 
-      - name: Install libcoap from distro packages
+      - name: Install libcoap and GLFW build dependencies from distro packages
         run: |
           sudo apt-get update
-          sudo apt-get install -y libcoap3-dev
+          sudo apt-get install -y libcoap3-dev libx11-dev libxrandr-dev \
+            libxinerama-dev libxcursor-dev libxi-dev libxext-dev libgl1-mesa-dev
           sudo ldconfig
 
       - name: Build cimgui
