@@ -14,8 +14,39 @@ else:
   import posix
 import nativesockets
 
-# only supports Linux at present
-const libName = "libcoap-3-openssl.so(|.3)"
+when defined(windows):
+  # vcpkg's libcoap port only builds a static library on Windows ("dllexport
+  # is not supported"), so link coap-3.lib directly rather than loading a DLL.
+  # The install prefix (containing include/ and lib/) is taken from
+  # -d:libcoapRoot=<dir>, or else from the VCPKG_INSTALLED environment variable.
+  import std/os
+  const libcoapRoot {.strdefine.} = getEnv("VCPKG_INSTALLED")
+  when libcoapRoot.len > 0:
+    {.passC: "-I" & quoteShell(libcoapRoot / "include").}
+  when defined(vcc):
+    when libcoapRoot.len > 0:
+      {.passL: "/LIBPATH:" & quoteShell(libcoapRoot / "lib").}
+    {.passL: "coap-3.lib ws2_32.lib iphlpapi.lib".}
+  else:
+    when libcoapRoot.len > 0:
+      {.passL: "-L" & quoteShell(libcoapRoot / "lib").}
+    {.passL: "-lcoap-3 -lws2_32 -liphlpapi".}
+elif defined(macosx):
+  # Homebrew's libcoap. Its prefix is not on the default include or dlopen()
+  # search paths, so add it explicitly; take it from -d:libcoapRoot=<dir>, or
+  # else from the LIBCOAP_BREW_PREFIX/HOMEBREW_PREFIX environment variables.
+  # At runtime prefer a copy bundled in Cotel.app/Contents/Frameworks.
+  import std/os
+  const libcoapRoot {.strdefine.} =
+    if existsEnv("LIBCOAP_BREW_PREFIX"): getEnv("LIBCOAP_BREW_PREFIX")
+    elif existsEnv("HOMEBREW_PREFIX"): getEnv("HOMEBREW_PREFIX")
+    elif defined(arm64): "/opt/homebrew"
+    else: "/usr/local"
+  {.passC: "-I" & quoteShell(libcoapRoot / "include").}
+  const libName = "(@executable_path/../Frameworks/|" & libcoapRoot &
+                  "/lib/|)libcoap-3-openssl(.3|).dylib"
+else:
+  const libName = "libcoap-3-openssl.so(|.3)"
 
 type
   CProto* = cint
@@ -177,7 +208,10 @@ type
 const
   COAP_OPT_ALL* = cast[ptr COptFilter](nil)
 
-{.push dynlib: libName.}
+when defined(windows):
+  {.push cdecl.}
+else:
+  {.push dynlib: libName.}
 # net.h
 proc freeContext*(context: CContext) {.importc: "coap_free_context".}
 
